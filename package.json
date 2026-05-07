@@ -25,8 +25,7 @@
     "@electron-toolkit/utils": "^3.0.0",
     "ffmpeg-static": "^5.2.0",
     "ffprobe-static": "^3.1.0",
-    "music-metadata": "^7.14.0",
-    "nanoid": "^5.0.7"
+    "music-metadata": "^7.14.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-ts": "^2.0.0",

@@ -2,7 +2,11 @@ import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { join } from 'node:path'
 import { readFileSync } from 'node:fs'
-import { nanoid } from 'nanoid'
+import { randomBytes } from 'node:crypto'
+
+function shortId(): string {
+  return randomBytes(8).toString('base64url').replace(/[-_]/g, '').slice(0, 10) || `${Date.now()}`
+}
 
 import { RenderService } from './render-service'
 import { getAudioInfo } from './audio-info'
@@ -122,7 +126,7 @@ function registerIpc(): void {
   ipcMain.handle('lyrics:parse', (_e, text: string) => parseLyrics(text))
 
   ipcMain.handle('render:start', (_e, project: ProjectSettings) => {
-    const jobId = nanoid(10)
+    const jobId = shortId()
     const job = renderService.start(jobId, project)
     activeJobs.set(jobId, job)
     job.done.finally(() => activeJobs.delete(jobId))
