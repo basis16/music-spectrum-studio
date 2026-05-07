@@ -144,6 +144,7 @@ export default function App(): JSX.Element {
           <Section title="3. Lirik & Tipografi" subtitle="Import LRC/SRT atau ketik manual.">
             <LyricsSection
               project={project}
+              audio={audio}
               onChangeLines={(lines: LyricLine[]) => setProject((p) => ({ ...p, lines }))}
               onChangeLyrics={(patch) => setProject((p) => ({ ...p, lyrics: { ...p.lyrics, ...patch } }))}
               onChangeMeta={(patch) => setProject((p) => ({ ...p, ...patch }))}

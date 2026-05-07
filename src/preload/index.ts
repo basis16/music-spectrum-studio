@@ -1,7 +1,14 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-import type { AudioInfo, LyricLine, ProjectSettings, RenderEvent } from '../shared/types'
+import type {
+  AudioInfo,
+  LyricLine,
+  ProjectSettings,
+  RenderEvent,
+  TranscribeEvent,
+  TranscribeOptions
+} from '../shared/types'
 
 const api = {
   openAudio(): Promise<AudioInfo | null> {
@@ -38,6 +45,17 @@ const api = {
     const listener = (_e: IpcRendererEvent, ev: RenderEvent): void => cb(ev)
     ipcRenderer.on('render:event', listener)
     return () => ipcRenderer.removeListener('render:event', listener)
+  },
+  startTranscribe(audioPath: string, options: TranscribeOptions): Promise<string> {
+    return ipcRenderer.invoke('transcribe:start', audioPath, options)
+  },
+  cancelTranscribe(jobId: string): Promise<boolean> {
+    return ipcRenderer.invoke('transcribe:cancel', jobId)
+  },
+  onTranscribeEvent(cb: (ev: TranscribeEvent) => void): () => void {
+    const listener = (_e: IpcRendererEvent, ev: TranscribeEvent): void => cb(ev)
+    ipcRenderer.on('transcribe:event', listener)
+    return () => ipcRenderer.removeListener('transcribe:event', listener)
   }
 }
 

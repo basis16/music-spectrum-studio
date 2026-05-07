@@ -136,6 +136,46 @@ export interface RenderRequest {
   project: ProjectSettings
 }
 
+export interface TranscribeOptions {
+  /**
+   * Language hint for Whisper. Use 'auto' to let the model detect.
+   * Common values: 'auto', 'id' (Indonesian), 'en', 'ja', 'es', 'fr', etc.
+   */
+  language: 'auto' | string
+  /**
+   * Hugging Face model id to load via @xenova/transformers.
+   * Default is 'Xenova/whisper-base' (~75 MB, multilingual, balance of speed and accuracy).
+   * Use 'Xenova/whisper-tiny' for faster but less accurate, or 'Xenova/whisper-small' for higher quality.
+   */
+  modelId: string
+}
+
+export type TranscribeStage = 'loading-model' | 'decoding-audio' | 'transcribing' | 'finalizing'
+
+export interface TranscribeProgress {
+  jobId: string
+  stage?: TranscribeStage
+  /** 0..1 overall progress (best-effort) */
+  progress?: number
+  /** Processed seconds of audio (during transcribing stage) */
+  timeSec?: number
+  /** Total audio duration */
+  totalSec?: number
+  /** Free-form human-readable status message */
+  message?: string
+  partialText?: string
+  chunkIndex?: number
+  totalChunks?: number
+}
+
+export type TranscribeEvent =
+  | { type: 'transcribe-started'; jobId: string }
+  | { type: 'transcribe-stage'; jobId: string; stage: TranscribeStage; message?: string }
+  | ({ type: 'transcribe-progress' } & TranscribeProgress)
+  | { type: 'transcribe-done'; jobId: string; lines: LyricLine[] }
+  | { type: 'transcribe-cancelled'; jobId: string }
+  | { type: 'transcribe-error'; jobId: string; message: string }
+
 export interface PresetInfo {
   id: string
   name: string

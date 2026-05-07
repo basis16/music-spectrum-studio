@@ -9,12 +9,14 @@ function shortId(): string {
 }
 
 import { RenderService } from './render-service'
+import { TranscribeService } from './transcribe-service'
 import { getAudioInfo } from './audio-info'
 import { parseLyrics } from '../shared/lyrics'
-import type { ProjectSettings, RenderEvent } from '../shared/types'
+import type { ProjectSettings, RenderEvent, TranscribeEvent, TranscribeOptions } from '../shared/types'
 
 let mainWindow: BrowserWindow | null = null
 const renderService = new RenderService()
+let transcribeService: TranscribeService | null = null
 const activeJobs = new Map<string, ReturnType<RenderService['start']>>()
 
 function createWindow(): void {
@@ -135,6 +137,28 @@ function registerIpc(): void {
 
   ipcMain.handle('render:cancel', (_e, jobId: string) => {
     renderService.cancel(jobId)
+    return true
+  })
+
+  ipcMain.handle('transcribe:start', async (_e, audioPath: string, options: TranscribeOptions) => {
+    if (!transcribeService) {
+      const cacheDir = join(app.getPath('userData'), 'whisper-models')
+      transcribeService = new TranscribeService(cacheDir)
+      transcribeService.on('event', (ev: TranscribeEvent) => {
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.webContents.send('transcribe:event', ev)
+        }
+      })
+    }
+    const jobId = shortId()
+    transcribeService.start(jobId, audioPath, options).done.catch(() => {
+      /* errors are emitted as events */
+    })
+    return jobId
+  })
+
+  ipcMain.handle('transcribe:cancel', (_e, jobId: string) => {
+    if (transcribeService) transcribeService.cancel(jobId)
     return true
   })
 
