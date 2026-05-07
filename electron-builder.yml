@@ -1,0 +1,47 @@
+appId: com.basis.musicspectrumstudio
+productName: Music Spectrum Studio
+copyright: Copyright (c) 2025 Basis Muhammad
+directories:
+  output: release/${version}
+  buildResources: build
+files:
+  - out/**
+  - package.json
+  - "!**/.git/**"
+  - "!**/.github/**"
+  - "!**/test/**"
+  - "!**/*.map"
+asarUnpack:
+  - node_modules/ffmpeg-static/**
+  - node_modules/ffprobe-static/**
+extraResources:
+  - from: assets
+    to: assets
+    filter:
+      - "**/*"
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: ${productName}-${version}-Setup.${ext}
+  publisherName: Basis Muhammad
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: Music Spectrum Studio
+  installerIcon: build/installer-icon.ico
+  uninstallerIcon: build/uninstaller-icon.ico
+mac:
+  target:
+    - dmg
+  category: public.app-category.music
+linux:
+  target:
+    - AppImage
+    - deb
+  category: AudioVideo
