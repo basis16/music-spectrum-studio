@@ -67,14 +67,14 @@ function barsFilter(
 ): string {
   const colors = `${v.color}|${v.colorSecondary}`
   const mode = v.mirror ? 'separate' : 'combined'
-  const winFunc = 'hann'
+  const winFunc = 'hanning'
   const slide = 'replace'
   const ascale = 'log'
   const fscale = 'log'
   const drange = `${(80 + intensity * 40).toFixed(0)}`
   const tlength = '0.17'
   const blur = glowBlurAmount(glow)
-  let out = `[0:a]showfreqs=s=${w}x${h}:rate=${fps}:mode=bar:fscale=${fscale}:ascale=${ascale}:win_size=2048:win_func=${winFunc}:colors=${colors}`
+  let out = `[0:a]showfreqs=s=${w}x${h}:mode=bar:fscale=${fscale}:ascale=${ascale}:win_size=2048:win_func=${winFunc}:colors=${colors},fps=${fps}`
   if (blur > 0) out += `,gblur=sigma=${blur.toFixed(2)}`
   out += `,colorkey=color=0x000000:similarity=0.05:blend=0.05,format=yuva420p`
   void mode; void slide; void drange; void tlength
