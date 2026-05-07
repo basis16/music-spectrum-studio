@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-ink-950 text-slate-100 font-sans antialiased;
+  margin: 0;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500/40 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-accent-500 text-ink-950 hover:bg-accent-400;
+  }
+  .btn-secondary {
+    @apply btn bg-ink-700 text-slate-100 hover:bg-ink-600;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-slate-300 hover:bg-ink-800;
+  }
+  .panel {
+    @apply rounded-xl border border-ink-700 bg-ink-900/80 backdrop-blur-md;
+  }
+  .panel-header {
+    @apply flex items-center justify-between border-b border-ink-700 px-4 py-3;
+  }
+  .label {
+    @apply mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400;
+  }
+  .input,
+  .select,
+  .textarea {
+    @apply w-full rounded-md border border-ink-600 bg-ink-800 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-accent-500 focus:outline-none focus:ring-1 focus:ring-accent-500;
+  }
+  .textarea {
+    @apply font-mono;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full bg-ink-700 px-2 py-0.5 text-xs text-slate-300;
+  }
+}
+
+/* Range slider polish */
+input[type='range'] {
+  @apply h-1.5 w-full appearance-none rounded-full bg-ink-700 accent-accent-500;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: theme('colors.accent.500');
+  border: 2px solid theme('colors.ink.950');
+  cursor: pointer;
+}
+
+/* Scrollbars */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: theme('colors.ink.700');
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: theme('colors.ink.600');
+}
